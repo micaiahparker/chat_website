@@ -11,6 +11,9 @@
     width: 100%;
     background-color: #b3c2bf;
 }
+.modal-backdrop.in {
+	opacity: 0.9;
+}
 .col-md-8{
     margin-top: 10px;
     height: 400px;
