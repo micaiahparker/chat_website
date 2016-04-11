@@ -13,7 +13,7 @@
     
     <script>
 	$(document).ready(function(){
-		$("#myModal").modal('show');
+		$("#loginPrompt").modal('show');
 	});
     </script>
     
@@ -21,7 +21,7 @@
 </head>
 <body>
     <!--start of modal-->
-    <div id="myModal" class="modal fade">
+    <div id="loginPrompt" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -64,17 +64,17 @@
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <a class="navbar-brand" href="#">Welcome: username</a>
-                    </div>
+                    </div>  
+             
                     <ul class="nav navbar-nav">
                      <li  class="dropdown"><a id="chat" class="dropdown-toggle" data-toggle="dropdown" href="#">options<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">create group chat</a></li>
-                        <li><a href="#">join group chat</a></li>
-                        <li><a href="#">delete group chat</a></li>
-                        <li><a href="#">logout</a></li>
+                    <ul class="dropdown-menu">  
+                        <li><a href="#createGroup" data-toggle="modal">create group chat</a></li>
+                        <li><a href="#findGroup" data-toggle="modal">find group chat</a></li>                       
+                        <li><a id="logout" href="#">logout</a></li>
                     </ul>
                 </li>     
-                </ul>
+                </ul>             
             </div>
         </nav>
             <!--end of nav bar-->
@@ -124,7 +124,7 @@
                     <div class="send">
                     <div class="form-group">
                     <!--<input type="text" class="form-control" id="message" placeholder="Enter message">-->
-                    <textarea class="form-control" rows="1" id="message"></textarea>
+                    <textarea class="form-control" rows="3" id="message"></textarea>
                     </div>
                     <button type="submit" class="btn btn-info">send</button>
                     </div>
@@ -135,6 +135,69 @@
             
         </div>
 </div>
+    <!--start of create group modal -->
+    <div class="modal fade" id="createGroup" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Create private group chat</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+                    <div class="form-group">
+                        <label for="groupName">Choose a name for your private chat:</label>
+                        <input type="text" id="groupName" class="form-control" placeholder="enter group name">
+                    </div>
+                    <div class="form-group">
+                        <label for="groupName">Add users to private chat:</label>
+                        <input type="email" id="users" class="form-control" placeholder="enter usernames">
+                        <p>*to add multiple users, separate each username with a comma.</p>
+                    </div>
+                    <button type="submit" id="addUsers" class="btn btn-primary">add</button>
+                </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Create</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+     <!--end of create group modal -->
+    <!--start of find group modal -->
+    <div class="modal fade" id="findGroup" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Find a group chat</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+                    <div class="form-group">
+                        <label for="findGroup">enter the group name:</label>
+                        <input type="text" id="findAGroup" class="form-control" placeholder="enter group name">
+                    </div>
+                        <label for="request">Send request to join group</label>
+                        <button type="submit" id="sendRequest" class="btn btn-primary">send</button>
+                </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+     <!--end of find group modal -->
+    
+    
     <!--end of chat room-->
 
     

@@ -11,9 +11,6 @@
     width: 100%;
     background-color: #b3c2bf;
 }
-.modal-backdrop.in {
-	opacity: 0.9;
-}
 .col-md-8{
     margin-top: 10px;
     height: 400px;
@@ -28,6 +25,9 @@
     height: 100px;
     /*border: 0.1em dotted black;*/
 }
+.modal-backdrop.in {
+	opacity: 0.9;
+}
 #nav{
     float: right;
 }
@@ -37,6 +37,11 @@
 #message{
    resize: none;
     width: 400px;
+    margin-top: -10px;
+}
+.btn-info{
+    margin-left: 10px;
+    margin-top: -30px;
 }
 .navbar-nav{
     float:right;
@@ -47,6 +52,9 @@
 #chat{
     background-color: #6CADDE;
     color: white;
+}
+#createGroup{
+    
 }
 #currentUsers{
     resize: none;
@@ -71,4 +79,18 @@
     margin-top: -100px;
     margin-right: 90px;
 }
+textarea
+{
+    overflow-y:scroll;
+}
 
+/*
+have some bright white in there too
+#F4F4F4 nav bar
+#E1E3E4 gray-white (background)
+#c0dfd9 light green
+#e9ece5 off white
+#b3c2bf mossy green
+#3b3a36 char black
+#6CADDE blue for buttons and tabs
+*/
