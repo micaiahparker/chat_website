@@ -10,7 +10,8 @@ var MongoClient = require('mongodb').MongoClient;
 
 function addUser(username, passwd){
 	MongoClient.connect("mongodb://localhost:27017/chat_server", function(err, db) {
-		db.users.insert({'user': username, 'pass': passwd});
+		var result = db.users.insert({'user': username, 'pass': passwd});
+		console.log(result);
 		db.close();
 	});
 }
@@ -31,11 +32,11 @@ io.on("connection", function(socket){
 	socket.on('newuser', function(data){
 		addUser(newUser(data['user'], data['pass']));
 		var user = getUser(data['user'], data['pass']);
-		socket.emit(user);
+		socket.emit('senduser', user);
 	});
 	socket.on('login', function(data){
 		var user = getUser(data['user'], data['pass']);
-		socket.emit(user);
+		socket.emit('senduser', user);
 	});
 });
 
