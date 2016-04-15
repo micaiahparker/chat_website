@@ -9,8 +9,8 @@ $(document).ready(function(){
             getPassword = $('#password').val(),
             login = {};
         
-        login.u = getUsername;
-        login.p = getPassword;
+        login.user = getUsername;
+        login.pass = getPassword;
         
         socket.emit('login', login);
         
