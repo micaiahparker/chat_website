@@ -2,21 +2,15 @@
 <html>
 <head>
     <title>huddle</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript" src="client.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link type="text/css" rel="stylesheet" href="style.css">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
     <!--<script src="/socket.io/socket.io.js"></script>-->
-    <script type="text/javascript" src="client.js"></script>
-    
-    <script>
-	$(document).ready(function(){
-		$('#loginPrompt').modal('show');
-	});
-    </script>
-    
+     
     
 </head>
 <body>
@@ -25,7 +19,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <!--perhaps disable closing with x-->
+                <!--disable closing with x-->
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title">Welcome to huddle!</h4>
             </div>
@@ -36,10 +30,10 @@
                         <input type="text" id="username" class="form-control" placeholder="Username">
                     </div>
                     <div class="form-group">
-                        <input type="email" id="password" class="form-control" placeholder="Password">
+                        <input type="password" id="password" class="form-control" placeholder="Password">
                     </div>
-                    <button type="submit" id="login" class="btn btn-primary lbutton">login</button>
-                    <button type="submit" id="createAccount" class="btn btn-primary lbutton">create account</button>
+                    <button type="button" id="login" class="btn btn-primary lbutton">login</button>
+                    <button type="button" id="createAccount" class="btn btn-primary lbutton">create account</button>
                 </form>
             </div>
         </div>
@@ -126,7 +120,7 @@
                     <!--<input type="text" class="form-control" id="message" placeholder="Enter message">-->
                     <textarea class="form-control" rows="3" id="message"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-info">send</button>
+                    <button type="button" class="btn btn-info">send</button>
                     </div>
             </form>    
             </div>    
@@ -156,7 +150,7 @@
                         <input type="email" id="users" class="form-control" placeholder="enter usernames">
                         <p>*to add multiple users, separate each username with a comma.</p>
                     </div>
-                    <button type="submit" id="addUsers" class="btn btn-primary">add</button>
+                    <button type="button" id="addUsers" class="btn btn-primary">add</button>
                 </form>
         </div>
         <div class="modal-footer">
@@ -180,13 +174,13 @@
         </div>
         <div class="modal-body">
           <form>
-                <div class="form-group">
-                    <label for="findGroup">enter the group name:</label>
-                    <input type="text" id="findAGroup" class="form-control" placeholder="enter group name">
-                </div>
-                    <label for="request">Send request to join group</label>
-                    <button type="submit" id="sendRequest" class="btn btn-primary">send</button>
-            </form>
+                    <div class="form-group">
+                        <label for="findGroup">enter the group name:</label>
+                        <input type="text" id="findAGroup" class="form-control" placeholder="enter group name">
+                    </div>
+                        <label for="request">Send request to join group</label>
+                        <button type="button" id="sendRequest" class="btn btn-primary">send</button>
+                </form>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
