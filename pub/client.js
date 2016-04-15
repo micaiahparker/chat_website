@@ -1,4 +1,4 @@
-//var socket = io();
+var socket = io();
 
 $(document).ready(function(){
     $("#loginPrompt").modal('show');
@@ -30,7 +30,13 @@ $(document).ready(function(){
         $('#loginPrompt').modal('hide');
         
     });
+    
+    socket.on('senduser', function(userInfo){
+       
         
+        
+        });
+       
 	});
 
 
