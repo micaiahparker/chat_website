@@ -25,7 +25,7 @@ function newUser(username, passwd){
 }
 
 function getUser(username, passwd){
-	return {};
+	return {'user': username, 'rooms':{}};
 }
 
 io.on("connection", function(socket){
