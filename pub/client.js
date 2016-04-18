@@ -14,8 +14,6 @@ $(document).ready(function(){
         
         socket.emit('login', login);
         
-        $('#loginPrompt').modal('hide');
-        
     });
     
     $('#createAccount').on('click', function(){
@@ -27,17 +25,29 @@ $(document).ready(function(){
         
         socket.emit('newuser', account);
         
-        $('#loginPrompt').modal('hide');
+    });
+    
+    $("#createGroupButton").on('click',function(){
+        var groupName = $("#groupName").va(),
+            groupUsers = $("#users").val();
+            
+        var splitUsers = groupUsers.split(",");
+        splitUsers.forEach(function(user){
+            console.log(user);
+        });
         
     });
     
     socket.on('senduser', function(userInfo){
+        $('#loginPrompt').modal('hide');
+    });
+    
+    /*
+     * 
+     * 
+     */
        
-        
-        
-        });
-       
-	});
+});
 /*
  * Here are my thoughts on parts of what the client could have/need/use
  * 
@@ -105,5 +115,29 @@ $(document).ready(function(){
  *          calls updateRoom(r)
  *          sets user.currentRoom to r
  *          tells server joined room r(?)
- *      
+ *          
+ *          
+ *          
+ *          
+ * Features
+ * User can enter room by clicking it
+ * User can send messages in chat room
+ * User can receive messages in chat room
+ * User can start a new room with a selected group of people
+ * User can start a private room without needing to go through create room process
+ * If you get a message in a room you're not in, the room lights up and a little notification icon pops up
+ * When you enter a room, you start scrolled down to the bottom of the chat box
+ * When you enter a room with new messages, you still start at the bottom of the chat box
+ * No indicator of which messages in the room are new (probably?)
+ * User can leave rooms
+ * User can close rooms
+ * If a room gets a message and is closed for the user (but user is still a user in the room)
+ *  it will reopen the room on the side and highlight or whatever indicator a new message is
+ * User can see a list of all people in a room
+ *  if in a private room with multilple people, should show whether online or offline(?)
+ * In the Public room, it only shows online people. When a user goes offline, he should "Leave" the room
+ * On closing and reopening the page 
+ *  the public room should show the last 10 or so messages (or up to the last 10 minutes?)
+ *  all available rooms should still be listed in the rooms list
+ *  all available rooms should show the last 10 or so messages (or up to the last 10 minutes?)
  */
