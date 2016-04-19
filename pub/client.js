@@ -76,6 +76,8 @@ $(document).ready(function(){
         //re add room to function
        //append message to room's log
        //append message to room's div
+       console.log("Message from server");
+       console.log(message.msg);
        user.availableRooms[0].localLog.push(message);
 //       room.messages.push(message);
        $("#room0").append(createMessageHTML(message));
