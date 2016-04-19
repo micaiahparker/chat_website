@@ -121,7 +121,7 @@ $(document).ready(function(){
         else{
             $("#displayUserName").text(user.name);
             //var keys = Object.keys(user.availableRooms);
-            
+            $("#currentUsers").text(publicRoom.users + "</br>")
             
             
             
