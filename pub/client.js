@@ -120,6 +120,9 @@ $(document).ready(function(){
             $("#displayUserName").text(user.name);
             //var keys = Object.keys(user.availableRooms);
             
+            
+            
+            
             //make all the room divs
             var div = createDiv(user.availableRooms[0]);
             $("#publicChat").append(div);
@@ -162,9 +165,9 @@ function updateUsersInRoom(room){
     var users = "";
     room.users.forEach(function(user){
        users+=user;
-       users+="\n";
+       users+="</br>";
     });
-    document.getElementById("currentUsers").innerHTML = users;
+    $("#currentUsers").val(users);
 }
 
 /*
