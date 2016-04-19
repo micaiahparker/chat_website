@@ -6,6 +6,17 @@ var user = {
     availableRooms: {}
 };
 
+/*
+$("button").on('click',function(){
+	            var msg = $("#message").val();
+        
+                var messageAsLink = $('<a>',{
+                text: msg,
+                href:'#',
+                click:function(){console.log('added group');return false;}
+                }).appendTo("#createGroup");
+*/
+
 $(document).ready(function(){
     $("#loginPrompt").modal('show');
     
