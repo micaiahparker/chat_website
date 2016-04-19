@@ -50,7 +50,7 @@ io.on("connection", function(socket){
 	});
 });
 
-server.listen(5555, function() {
+server.listen(1234, function() {
 	/*
 	MongoClient.connect(url, function(err, db){
 		console.log(err);
