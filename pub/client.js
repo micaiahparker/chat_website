@@ -116,7 +116,8 @@ $(document).ready(function(){
         else{
             $("#displayUserName").text(user.name);
             //var keys = Object.keys(user.availableRooms);
-            $("#currentUsers").append("<p>" + publicRoom.users + "</p>" + "</br");
+            $("#currentUsers").append("<p>" + aUser + "</p>");
+            }
             /*
                 var groupNameAsLink = $('<a>',{
                 text: someGroupName,
@@ -128,7 +129,18 @@ $(document).ready(function(){
                 
                 return false; 
                 }
-                }).appendTo("#createGroup");
+                }).appendTo("#currentGroup");
+                
+                or as a button:
+                
+                function groupName() {
+                    var r=$('<input/>').attr({
+                        type: "button",
+                        id: "field", //unique id for that group
+                        value: 'new' //value would be the group name
+                    });
+                    $("#currentGroup").append(r);    
+}
             */
             
             
