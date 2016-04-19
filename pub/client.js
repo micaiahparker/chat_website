@@ -59,7 +59,9 @@ $(document).ready(function(){
     });
     
     $("#sendChatButton").on('click',function(){
+        console.log("i clicked send");
         var msg = $("#message").val();
+        console.log(msg);
         var sender = user.name;
         var time = 2;
         var message = {
@@ -74,7 +76,7 @@ $(document).ready(function(){
         //re add room to function
        //append message to room's log
        //append message to room's div
-       user.availableRooms[0].push(message);
+       user.availableRooms[0].localLog.push(message);
 //       room.messages.push(message);
        $("#room0").append(createMessageHTML(message));
        //if i'm not in the room, light up room
@@ -94,12 +96,14 @@ $(document).ready(function(){
             time: 1
         };
         user.availableRooms[0] = publicRoom;
+        publicRoom.localLog.push(testMessage);
         //user = userInfo;
         //check if valid user
         if(user.name === "null"){
             //bad shit
         }
         else{
+            $("#displayUserName").text(user.name);
             //var keys = Object.keys(user.availableRooms);
             
             //make all the room divs
