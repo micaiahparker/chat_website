@@ -1,5 +1,11 @@
 var socket = io();
 
+var user = {
+    name: "Jack",
+    currentRoom: "Public",
+    availableRooms: {}
+};
+
 $(document).ready(function(){
     $("#loginPrompt").modal('show');
     
@@ -11,9 +17,8 @@ $(document).ready(function(){
         
         login.user = getUsername;
         login.pass = getPassword;
-        
-        socket.emit('login', login);
-        
+        //socket.emit('login', login);
+        socket.emit("dumblogin",login);
     });
     
     $('#createAccount').on('click', function(){
@@ -28,26 +33,122 @@ $(document).ready(function(){
     });
     
     $("#createGroupButton").on('click',function(){
-        var groupName = $("#groupName").va(),
+        var groupName = $("#groupName").val(),
             groupUsers = $("#users").val();
             
         var splitUsers = groupUsers.split(",");
         splitUsers.forEach(function(user){
             console.log(user);
         });
-        
+        var room = {
+            users: splitUsers,
+            name: groupName,
+            messages: []
+        };
+        socket.emit("newRoom",room);
+    });
+    
+    socket.on("sendroom",function(room){
+        //TODO
+        //should just be used for new users and new groups
+        if(!(room.id in user.availableRooms)){
+            user.availableRooms[room.id] = room;
+        }    
+        //enter room
+        enterRoom(room);
+    });
+    
+    $("#sendChatButton").on('click',function(){
+        var msg = $("#message").val();
+        var sender = user.name;
+        var time = 2;
+        var message = {
+            sender: sender,
+            msg: msg,
+            time: time
+        };
+        socket.emit("messageToServer",message);
+    });
+    
+    socket.on('messageFromServer',function(message){
+        //re add room to function
+       //append message to room's log
+       //append message to room's div
+       user.availableRooms[0].push(message);
+//       room.messages.push(message);
+       $("#room0").append(createMessageHTML(message));
+       //if i'm not in the room, light up room
     });
     
     socket.on('senduser', function(userInfo){
-        $('#loginPrompt').modal('hide');
+        //TODO
+        user.name = userInfo.user;
+        var publicRoom = {
+            users: userInfo.users,
+            id: 0,
+            localLog: []
+        };
+        var testMessage = {
+            sender: "Test",
+            msg: "a message",
+            time: 1
+        };
+        user.availableRooms[0] = publicRoom;
+        //user = userInfo;
+        //check if valid user
+        if(user.name === "null"){
+            //bad shit
+        }
+        else{
+            //var keys = Object.keys(user.availableRooms);
+            
+            //make all the room divs
+            var div = createDiv(user.availableRooms[0]);
+            $("#publicChat").append(div);
+            $("#room0").append(createMessageHTML(testMessage));
+            $('#loginPrompt').modal('hide');
+        }
+        
     });
-    
-    /*
-     * 
-     * 
-     */
        
 });
+
+function createDiv(room){
+    var div = "<div id=room"+room.id+"></div>";
+    return div;
+}
+
+function createMessageHTML(message){
+    var msg = "<p>"+message.sender+":"+message.msg+" |"+message.time+"</p>";
+    return msg;
+}
+
+function enterRoom(room){
+    //if in groups tab
+    //highlight currently joined group(?)
+    $("#room"+user.currentRoom.id).hide();
+    user.currentRoom = room;
+    $("#room"+user.currentRoom.id).show();
+    updateUsersInRoom(room);
+    
+}
+
+function newUserInRoom(user,roomName){
+    var room = user.rooms[roomName];
+    room.users.push(user.name);
+    updateUsersInRoom(room);
+}
+
+function updateUsersInRoom(room){
+    //display room.users in users pane
+    var users = "";
+    room.users.forEach(function(user){
+       users+=user;
+       users+="\n";
+    });
+    document.getElementById("currentUsers").innerHTML = users;
+}
+
 /*
  * Here are my thoughts on parts of what the client could have/need/use
  * 
@@ -55,11 +156,11 @@ $(document).ready(function(){
  * User object:
  *      name
  *      currentRoom(?)
- *      List<Room> all available rooms
- *      id(?)//name is probably id i guess?
+ *      Dictionary<RoomName,Room> all available rooms
  * 
  * Room object:
  *      roomId
+ *      roomName
  *      List<Message> localMessages
  *      List<String> membersInGroup
  *      
