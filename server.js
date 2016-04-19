@@ -41,13 +41,16 @@ io.on("connection", function(socket){
 		var user = newUser(data['user'], data['pass']);
 		socket.emit('senduser', user);
 	});
-	socket.on('dumb_login', function(data){
+	socket.on('dumblogin', function(data){
 		socket.emit('senduser', {'user':data['user'], 'users':users});
 		users.push(data['user']);
 	});
+	socket.on('messageToServer', function(data){
+		io.emit('messageFromServer', data);
+	});
 });
 
-server.listen(80, function() {
+server.listen(5555, function() {
 	/*
 	MongoClient.connect(url, function(err, db){
 		console.log(err);
