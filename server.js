@@ -46,9 +46,7 @@ io.on("connection", function(socket){
 		socket.emit('senduser', {'user':data['user'], 'users':users});
 	});
 	socket.on('messageToServer', function(data){
-		if (data != ""){
-			io.emit('messageFromServer', data);
-		}
+		io.emit('messageFromServer', data);
 	});
 });
 

@@ -72,16 +72,18 @@ $(document).ready(function(){
     $("#sendChatButton").on('click',function(){
         console.log("i clicked send");
         var msg = $("#message").val();
-        console.log(msg);
-        var sender = user.name;
-        var time = new Date();
-        var message = {
-            sender: sender,
-            msg: msg,
-            time: time
-        };
-        $("#message").val("");
-        socket.emit("messageToServer",message);
+        if (msg != ""){
+            console.log(msg);
+            var sender = user.name;
+            var time = new Date();
+            var message = {
+                sender: sender,
+                msg: msg,
+                time: time
+            };
+            $("#message").val("");
+            socket.emit("messageToServer",message);
+        }
     });
     
     socket.on('messageFromServer',function(message){
