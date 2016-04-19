@@ -162,12 +162,9 @@ function newUserInRoom(user,roomName){
 
 function updateUsersInRoom(room){
     //display room.users in users pane
-    var users = "";
     room.users.forEach(function(user){
-       users+=user;
-       users+="</br>";
+       $("#currentUsers").append("<p>"+user+"</p>");
     });
-    $("#currentUsers").val(users);
 }
 
 /*
