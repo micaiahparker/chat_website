@@ -6,19 +6,14 @@ var user = {
     availableRooms: {}
 };
 
-/*
-$("button").on('click',function(){
-	            var msg = $("#message").val();
-        
-                var messageAsLink = $('<a>',{
-                text: msg,
-                href:'#',
-                click:function(){console.log('added group');return false;}
-                }).appendTo("#createGroup");
-*/
+
 
 $(document).ready(function(){
     $("#loginPrompt").modal('show');
+    
+    $("#logout").on('click', function(){
+        socket.emit('logout', user.name);
+    });
     
     $('#login').on('click', function(){
         
@@ -122,6 +117,19 @@ $(document).ready(function(){
             $("#displayUserName").text(user.name);
             //var keys = Object.keys(user.availableRooms);
             $("#currentUsers").append("<p>" + publicRoom.users + "</p>" + "</br");
+            /*
+                var groupNameAsLink = $('<a>',{
+                text: someGroupName,
+                href:'#',
+                click:function(){
+                
+                //puts you into that room
+                //displays that room's chat
+                
+                return false; 
+                }
+                }).appendTo("#createGroup");
+            */
             
             
             
