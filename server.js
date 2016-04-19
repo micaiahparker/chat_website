@@ -42,11 +42,13 @@ io.on("connection", function(socket){
 		socket.emit('senduser', user);
 	});
 	socket.on('dumblogin', function(data){
-		socket.emit('senduser', {'user':data['user'], 'users':users});
 		users.push(data['user']);
+		socket.emit('senduser', {'user':data['user'], 'users':users});
 	});
 	socket.on('messageToServer', function(data){
-		io.emit('messageFromServer', data);
+		if (data != ""){
+			io.emit('messageFromServer', data);
+		}
 	});
 });
 
