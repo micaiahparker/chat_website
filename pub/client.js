@@ -80,6 +80,7 @@ $(document).ready(function(){
             msg: msg,
             time: time
         };
+        $("#message").val("");
         socket.emit("messageToServer",message);
     });
     
