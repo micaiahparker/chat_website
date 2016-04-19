@@ -99,7 +99,7 @@
     margin-top: 15px;
 }
 .send{
-   margin-top: 2px;
+   margin-top: 4px;
    margin-left: -250px;
 }
 #chatImage{
@@ -107,8 +107,5 @@
     margin-top: -100px;
     margin-right: 90px;
 }
-textarea
-{
-    overflow-y:scroll;
-}
+
 
