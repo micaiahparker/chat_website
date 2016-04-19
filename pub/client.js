@@ -118,7 +118,9 @@ $(document).ready(function(){
             //var keys = Object.keys(user.availableRooms);
             $("#currentUsers").append("<p>" + aUser + "</p>");
             }
-            /*
+        
+        //My idea for creating the group names as links:
+        
                 var groupNameAsLink = $('<a>',{
                 text: someGroupName,
                 href:'#',
@@ -131,17 +133,7 @@ $(document).ready(function(){
                 }
                 }).appendTo("#currentGroup");
                 
-                or as a button:
-                
-                function groupName() {
-                    var r=$('<input/>').attr({
-                        type: "button",
-                        id: "field", //unique id for that group
-                        value: 'new' //value would be the group name
-                    });
-                    $("#currentGroup").append(r);    
-}
-            */
+          
             
             
             
