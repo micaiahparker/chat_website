@@ -63,7 +63,7 @@ $(document).ready(function(){
         var msg = $("#message").val();
         console.log(msg);
         var sender = user.name;
-        var time = 2;
+        var time = new Date().getTime();
         var message = {
             sender: sender,
             msg: msg,
@@ -95,7 +95,7 @@ $(document).ready(function(){
         var testMessage = {
             sender: "Test",
             msg: "a message",
-            time: 1
+            time: new Date().getTime()
         };
         user.availableRooms[0] = publicRoom;
         publicRoom.localLog.push(testMessage);
@@ -125,7 +125,7 @@ function createDiv(room){
 }
 
 function createMessageHTML(message){
-    var msg = "<p>"+message.sender+":"+message.msg+" |"+message.time+"</p>";
+    var msg = "<p>"+message.sender+": "+message.msg+" |"+message.time+"</p>";
     return msg;
 }
 
