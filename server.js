@@ -9,7 +9,7 @@ var options = {
 
 var https = require("https");
 var server = https.Server(options, app);
-var forcessl = require("forcessl");
+var forcessl = require("express-force-ssl");
 app.use(forcessl);
 var socketio = require("socket.io");
 var io = socketio(server);
