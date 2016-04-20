@@ -5,7 +5,7 @@ var fs = require("fs");
 var privateKey = fs.readFileSync('certs/chat_key.pem').toString();
 var certificate = fs.readFileSync('certs/chat_cert.crt').toString();  
 
-var app = module.exports = express.createServer({key: privateKey, cert: certificate});
+const options = {key: privateKey, cert: certificate};
 
 var https = require("https");
 var server = https.Server(app, options);
