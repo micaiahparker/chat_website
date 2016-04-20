@@ -86,6 +86,6 @@ io.on("connection", function(socket){
 	});
 });
 
-server.listen(3333, function() {
+server.listen(1234, function() {
     console.log("Server is listening on port 1234");
 });
