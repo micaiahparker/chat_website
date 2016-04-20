@@ -65,10 +65,8 @@ $(document).ready(function(){
     });
     
     $("#sendChatButton").on('click',function(){
-        console.log("i clicked send");
         var msg = $("#message").val();
-        if (msg != ""){
-            console.log(msg);
+        if (msg !== ""){
             var sender = user.name;
             var time = new Date();
             var message = {
@@ -85,16 +83,47 @@ $(document).ready(function(){
         //re add room to function
        //append message to room's log
        //append message to room's div
-       console.log("Message from server");
-       console.log(message.msg);
        user.availableRooms[0].localLog.push(message);
 //       room.messages.push(message);
        $("#room0").append(createMessageHTML(message));
        //if i'm not in the room, light up room
     });
     
+    socket.on('userLoggedIn',function(user){
+        //for each room that you have that this user's name is in
+        //update the user list in it to show that they've logge in
+        //maybe include a "User has entered the channel" message to the rooms?
+        var keys = Object.keys(this.user.availableRooms);
+        keys.forEach(function(key){
+           var room = this.user.availabeRooms[key];
+           var users = room.users;
+           if(user in users){
+               updateUsersInRoom(room);
+               
+           }
+        });
+    });
+    
+    
     socket.on('senduser', function(userInfo){
         //TODO
+        //assuming userInfo will eventually contain:
+        //{
+        //  name: username
+        //  availableRooms: rooms (id's or the dictionary of rooms?
+        //}
+        /*
+         * user.name = userInfo.username;
+         * user.availableRooms = userInfo.rooms
+         * or
+         * userInfo.rooms.forEach(function(room){
+         *  user.availableRooms[room] = getRoomFromServerByID(room);
+         *  });
+         * displayRoom(user.availableRooms[0]);//put them in the public room
+         * updateUsers(user.availableRooms[0]);
+         * append either the last 10 messages of the public room's server log or maybe just not show them?
+         * 
+         */
         user.name = userInfo.user;
         var publicRoom = {
             users: userInfo.users,
@@ -116,11 +145,8 @@ $(document).ready(function(){
         else{
             $("#displayUserName").text(user.name);
             //var keys = Object.keys(user.availableRooms);
-            $("#currentUsers").append("<p>" + aUser + "</p>");
-            }
-        
-        //My idea for creating the group names as links:
-        
+            $("#currentUsers").append("<p>" + publicRoom.users + "</p>" + "</br");
+            /*
                 var groupNameAsLink = $('<a>',{
                 text: someGroupName,
                 href:'#',
@@ -131,11 +157,8 @@ $(document).ready(function(){
                 
                 return false; 
                 }
-                }).appendTo("#currentGroup");
-                
-          
-            
-            
+                }).appendTo("#createGroup");
+            */
             
             //make all the room divs
             var div = createDiv(user.availableRooms[0]);
