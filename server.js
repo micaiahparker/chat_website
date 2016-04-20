@@ -86,6 +86,6 @@ io.on("connection", function(socket){
 	});
 });
 
-server.listen(1234, function() {
-    console.log("Server is listening on port 1234");
+server.listen(443, function() {
+    console.log("Server is listening on port 443");
 });
