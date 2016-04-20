@@ -5,41 +5,68 @@ var server = http.Server(app);
 var socketio = require("socket.io");
 var io = socketio(server);
 app.use(express.static("pub"));
-var url = "mongodb://localhost:27017/chat_server";
-var MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/test');
 
-users = [];
+var User = mongoose.model('User', {name: String, pass: String, rooms: Array});
+var Room = mongoose.model('Room', {name: String, log: Array, users: Array});
 
-function newUser(username, passwd){
-	MongoClient.connect(url, function(err, db) {
-		db.collection('users').find({'user':username}, function(err, found){
-			console.log(found);
+function newUser(username, passwd, socket){
+	if (!userExists(username)){
+		User.create({name:username, pass:passwd}, function(err, user){
+			if (!err){
+				socket.emit("senduser", {'user':user.name,'rooms':user.rooms});
+			} else {
+				badUser(socket);
+			}
 		});
-		console.log(user);
-		db.close();
-		return user;
-	});
+	} else {
+		badUser(socket);
+	}
 }
 
-function getUser(username, passwd){
-	MongoClient.connect(url, function(err, db) {
-		db.collection('users').find({'user':username}, function(err, found){
-			console.log(found);
+function getUser(username, passwd, socket){
+	if (userExists(username)){
+		User.findOne({name:username, pass:passwd}, 'name rooms' function(err, user){
+			if (!err){
+				socket.emit("senduser", user);
+			}
 		});
-		console.log(user);
-		db.close();
-		return user;
+	} else {
+		badUser(socket);
+	}
+}
+
+function badUser(socket){
+	socket.emit("senduser", {'user':'null','rooms':[]});
+}
+
+function userExists(username){
+	var ret = false;
+	User.findOne({name:username}, 'name', function(err, user){
+		if (err || !user){
+			ret = false;
+		} else {
+			ret = true;
+		}
+	});
+	return ret;
+}
+
+function newRoom(roomname, users){
+	Room.create({name:roomname, log:[],users:[users]}, function(err, room){
+		if (!err){
+			console.log("created room "+room.name);
+		}
 	});
 }
 
 io.on("connection", function(socket){
 	socket.on('newuser', function(data){
-		var user = newUser(data['user'], data['pass']);
-		socket.emit('senduser', user);
+		newUser(data['name'], data['pass'], socket);
 	});
 	socket.on('login', function(data){
-		var user = newUser(data['user'], data['pass']);
-		socket.emit('senduser', user);
+		getUser(data['name'], data['pass'], socket);
 	});
 	socket.on('dumblogin', function(data){
 		users.push(data['user']);
@@ -51,22 +78,5 @@ io.on("connection", function(socket){
 });
 
 server.listen(1234, function() {
-	/*
-	MongoClient.connect(url, function(err, db){
-		console.log(err);
-		db.createCollection("users");
-		db.createCollection("rooms");
-		db.collection("users").insert({'user':'null_user','passwd':'dumbPass'});
-		db.close();
-	});
-	*/
     console.log("Server is listening on port 1234");
 });
-
-function testUser(){
-	var user = {}
-	user.name = 'test';
-	user.passwd = 'pass';
-	user.rooms = {};
-	return user;
-}
