@@ -1,12 +1,21 @@
 var express = require("express");
 var app = express();
-var http = require("http");
-var server = http.Server(app);
+var fs = require("fs");
+
+var options = {
+	key: fs.readFileSync("certs/chat_key.pem"),
+	cert: fs.readFileSync("certs/chat_cert.crt")
+};
+
+var https = require("https");
+var server = https.Server(options, app);
+var forcessl = require("forcessl");
+app.use(forcessl);
 var socketio = require("socket.io");
 var io = socketio(server);
 app.use(express.static("pub"));
 var mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/chat_server');
 
 var User = mongoose.model('User', {name: String, pass: String, rooms: Array});
 var Room = mongoose.model('Room', {name: String, log: Array, users: Array});
@@ -27,7 +36,7 @@ function newUser(username, passwd, socket){
 
 function getUser(username, passwd, socket){
 	if (userExists(username)){
-		User.findOne({name:username, pass:passwd}, 'name rooms' function(err, user){
+		User.findOne({name:username, pass:passwd}, 'name rooms', function(err, user){
 			if (!err){
 				socket.emit("senduser", user);
 			}
