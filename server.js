@@ -7,8 +7,8 @@ var options = {
 	cert: fs.readFileSync("certs/chat_cert.crt")
 };
 
-var https = require("https");
-var server = https.Server(options, app);
+var http = require("http");
+var server = http.Server(options, app);
 var forcessl = require("express-force-ssl");
 app.use(forcessl);
 var socketio = require("socket.io");
@@ -86,6 +86,6 @@ io.on("connection", function(socket){
 	});
 });
 
-server.listen(443, function() {
-    console.log("Server is listening on port 443");
+server.listen(1234, function() {
+    console.log("Server is listening on port 1234");
 });
