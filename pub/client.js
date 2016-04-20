@@ -6,7 +6,20 @@ var user = {
     availableRooms: {}
 };
 
-
+/**
+ * to server calls:
+ * 'logout',user
+ * 'login', login{name:name, password:password}
+ * 'newuser', login{name:name, password:password}
+ * 'newRoom', room{users:users, name:name}
+ * 'messageToServer', message{sender:sender, msg:message, time:time},room{id:roomID}
+ * 
+ * from server calls:
+ * 'sendroom', room{id:roomID,users:users,localLog:localLog}
+ * 'messageFromServer', message{sender:sender,msg:message,time:time}, room{id:roomID}
+ * 'userLoggedIn', user{name:name,rooms:availableRooms{id:id, users:users}}
+ * 'senduser', userInfo{name:name, rooms:availableRooms{id:id,users:users,localLog:someLog/emptyLog}}
+ */
 
 $(document).ready(function () {
     $("#loginPrompt").modal('show');
