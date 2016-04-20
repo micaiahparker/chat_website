@@ -9,16 +9,34 @@ var user = {
 /**
  * to server calls:
  * 'logout',user
+ *      //responds with 'userLoggedOut'(?)
  * 'login', login{name:name, password:password}
+ *      //responds with 'senduser'
+ *      //sends 'userLoggedIn' to all clients
  * 'newuser', login{name:name, password:password}
+ *      //responds with 'senduser'
+ *      //sends 'userLoggedIn' to all clients
  * 'newRoom', room{users:users, name:name}
+ *      //responds with 'sendroom'
  * 'messageToServer', message{sender:sender, msg:message, time:time},room{id:roomID}
+ *      //responds with 'messageFromServer'
+ * 'leaveGroup', user{name:name},room{id:roomID}
+ *      //respond with 'userLeftGroup'(?)
+ * 
  * 
  * from server calls:
  * 'sendroom', room{id:roomID,users:users,localLog:localLog}
+ *      //response to 'newRoom'
  * 'messageFromServer', message{sender:sender,msg:message,time:time}, room{id:roomID}
+ *      //response to 'messageToServer'
  * 'userLoggedIn', user{name:name,rooms:availableRooms{id:id, users:users}}
+ *      //on successful login, this broadcasts to all clients
  * 'senduser', userInfo{name:name, rooms:availableRooms{id:id,users:users,localLog:someLog/emptyLog}}
+ *      //response to 'login' and 'createuser'
+ * 'userLeftGroup', user{name:name},room{id:roomID}
+ *      //response to 'leaveGroup'
+ * 'userLoggedOut', user{name:name}
+ *      //broadcasted response to logout (?)
  */
 
 $(document).ready(function () {
@@ -297,22 +315,22 @@ function updateUsersInRoom(room) {
  *          
  *          
  * Features
- * User can enter room by clicking it
- * User can send messages in chat room
- * User can receive messages in chat room
- * User can start a new room with a selected group of people
- * User can start a private room without needing to go through create room process
- * If you get a message in a room you're not in, the room lights up and a little notification icon pops up
- * When you enter a room, you start scrolled down to the bottom of the chat box
- * When you enter a room with new messages, you still start at the bottom of the chat box
+ * User can enter room by clicking it //need some way to get the room with ajax(?)
+ * User can send messages in chat room //done
+ * User can receive messages in chat room //done
+ * User can start a new room with a selected group of people //need to add room to list of rooms in room tab, and get adding things to that working
+ * User can start a private room without needing to go through create room process //need to add a way to get username as an object, may not implement
+ * If you get a message in a room you're not in, the room lights up and a little notification icon pops up //need some way to get room with ajax
+ * When you enter a room, you start scrolled down to the bottom of the chat box //need to be able to change rooms to test, need to get scrolling to work too
+ * When you enter a room with new messages, you still start at the bottom of the chat box // ^
  * No indicator of which messages in the room are new (probably?)
- * User can leave rooms
- * User can close rooms
- * If a room gets a message and is closed for the user (but user is still a user in the room)
- *  it will reopen the room on the side and highlight or whatever indicator a new message is
- * User can see a list of all people in a room
- *  if in a private room with multilple people, should show whether online or offline(?)
- * In the Public room, it only shows online people. When a user goes offline, he should "Leave" the room
+ * User can leave rooms //need a leave room button when in a room (can't leave public room)
+ * User can close rooms //need a separate button that just hides the room from the rooms list until a new message appears
+ * If a room gets a message and is closed for the user (but user is still a user in the room) // ^
+ *  it will reopen the room on the side and highlight or whatever indicator a new message is// ^
+ * User can see a list of all people in a room //need to get updateUsersInRoom to work
+ *  if in a private room with multilple people, should show whether online or offline(?) //maybe an socket.emit('isonline',userName)
+ * In the Public room, it only shows online people. When a user goes offline, he should "Leave" the room //in logout maybe could remove username from user list?
  * On closing and reopening the page 
  *  the public room should show the last 10 or so messages (or up to the last 10 minutes?)
  *  all available rooms should still be listed in the rooms list
