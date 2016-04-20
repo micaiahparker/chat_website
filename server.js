@@ -2,15 +2,13 @@ var express = require("express");
 var app = express();
 var fs = require("fs");
 
-var options = {
-	key: fs.readFileSync("certs/chat_key.pem"),
-	cert: fs.readFileSync("certs/chat_cert.crt")
-};
+var privateKey = fs.readFileSync('certs/chat_key.pem').toString();
+var certificate = fs.readFileSync('certs/chat_cert.crt').toString();  
 
-var http = require("http");
-var server = http.Server(app, options);
-var forcessl = require("express-force-ssl");
-app.use(forcessl);
+var app = module.exports = express.createServer({key: privateKey, cert: certificate});
+
+var https = require("https");
+var server = https.Server(app, options);
 var socketio = require("socket.io");
 var io = socketio(server);
 app.use(express.static("pub"));
