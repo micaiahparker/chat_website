@@ -101,7 +101,7 @@
                     <div id="groups" class="tab-pane fade">
                         <!--start of Groups' text-area-->
                         <div class="form-group">
-                            <div id="currentGroups" contenteditable="false"></div>
+                            <div id="currentRooms" contenteditable="false"></div>
                         </div>
                         <!--start of Groups' text-area-->
                 </div>
@@ -130,7 +130,7 @@
         </div>
 </div>
     <!--start of create group modal -->
-    <div class="modal fade" id="createGroup" role="dialog">
+    <div class="modal fade" id="createRoom" role="dialog">
     <div class="modal-dialog modal-lg">
     
       <!-- Modal content-->
@@ -147,13 +147,13 @@
                     </div>
                     <div class="form-group">
                         <label for="groupName">Add users to private chat:</label>
-                        <input type="text" id="users" class="form-control" placeholder="enter usernames">
+                        <input type="text" id="groupUsers" class="form-control" placeholder="enter usernames">
                         <p>*to add multiple users, separate each username with a comma.</p>
                     </div>
                 </form>
         </div>
         <div class="modal-footer">
-            <button type="button" id="createGroupButton" class="btn btn-default" data-dismiss="modal">Create</button>
+            <button type="button" id="createRoomButton" class="btn btn-default" data-dismiss="modal">Create</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>

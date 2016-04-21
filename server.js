@@ -31,34 +31,46 @@ function newUser(username, passwd, socket) {
     User.create({name: username, pass: passwd, rooms: []}, function (err, user) {
         if (!err) {
             //userCreatePass
-            console.log(user.name+":"+user.rooms);
             addUserToRoom(user.name, "Public");
             socket.emit("sendUser", {name: "null", msg: "Account Created"});
         } else {
             //userCreateFail
-            socket.emit("sendUser", {name: "null", msg: err});
+            socket.emit("sendUser", {name: "null", msg: "Account Failed To Create"});
         }
     });
 }
 
 function getUser(username, passwd, socket) {
-    User.findOne({name: username}, 'name rooms', function (err, user) {
+    User.findOne({name: username}, 'name pass rooms', function (err, user) {
+
         if (!err && user.pass === passwd) {
+            //console.log(user.rooms[0]);
+            user.rooms.forEach(function (room) {
+                getRoom(room, socket);
+            });
             socket.emit("sendUser", {name: user.name, rooms: user.rooms});
             io.emit("userLoggedIn", {name: user.name});
         } else {
-            socket.emit("sendUser", {name: "null", msg: err});
+            socket.emit("sendUser", {name: "null", msg: "Incorrect information"});
         }
     });
 }
 
-function badUser(socket, msg) {
-    socket.emit("senduser", {name: 'null', rooms: {}, msg: msg});
+function getRoom(roomname, socket) {
+    Room.findOne({name: roomname}, function (err, room) {
+        console.log("Sending room: " + room.name);
+        socket.emit("addRoom", room);
+    });
 }
 
 function newRoom(roomname, users) {
     Room.create({name: roomname, log: [], users: users}, function (err, room) {
         if (!err) {
+            users.forEach(function (user) {
+                console.log(user+":"+roomname);
+                addUserToRoom(user, roomname);
+            });
+            io.emit('createdRoom',room,users);
             console.log("created room " + room.name);
         } else {
             console.log("couldn't create room " + room.name);
@@ -67,19 +79,16 @@ function newRoom(roomname, users) {
 }
 
 function addUserToRoom(username, roomname) {
-    User.find({name: username}, 'name rooms', function (err, user) {
-        Room.find({name: roomname}, 'name users', function (err, room) {
-            if(!user){
-                console.log("Shit");
+    User.findOne({name: username}, 'name rooms', function (err1, user) {
+        Room.findOne({name: roomname}, 'name users', function (err2, room) {
+            if (user) {
+                console.log(user);
+                user.rooms.push(room.name);
+                room.users.push(user.name);
+                console.log(user.rooms + ":" + room.users);
+                user.save();
+                room.save();
             }
-            if(!user.rooms){
-                console.log("Double shit");
-            }
-            user.rooms.push(room.name);
-            room.users.push(user.name);
-            user.save();
-            room.save();
-
         });
     });
 }
@@ -129,6 +138,12 @@ io.on("connection", function (socket) {
     socket.on('addToRoom', function (user, room) {
         addUserToRoom(user.name, room.name);
     });
+    socket.on('getRoom', function (room) {
+        getRoom(room, socket);
+    });
+    socket.on('logout', function (userName) {
+        io.emit('userLoggedOut', {name: userName});
+    });
 });
 
 server.listen(1234, function () {
@@ -143,6 +158,9 @@ server.listen(1234, function () {
             if (current.name !== "Public") {
                 console.log("bye " + current.name);
                 current.remove();
+            } else {
+                current.users = [];
+                current.save();
             }
         });
     });

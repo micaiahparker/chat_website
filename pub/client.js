@@ -77,7 +77,8 @@ $(document).ready(function () {
                 account = {};
         account.name = createUser;
         account.pass = createPassword;
-        $("#username").val("");
+        //$("#username").val("");
+        //$("#password").val("");
         socket.emit('newuser', account);
 
     });
@@ -85,7 +86,7 @@ $(document).ready(function () {
     //responds with 'sendroom'
     $("#createRoomButton").on('click', function () {
         var groupName = $("#groupName").val(),
-                groupUsers = $("#users").val();
+                groupUsers = $("#groupUsers").val();
 
         var splitUsers = groupUsers.split(",");
         var room = {
@@ -103,13 +104,12 @@ $(document).ready(function () {
         if (msg !== "") {
             var sender = user.name;
             var time = new Date();
-            var theTime = time.getHours()+":"+time.getMinutes();
+            var theTime = time.getHours() + ":" + time.getMinutes();
             var message = {
                 sender: sender,
                 msg: msg,
                 time: theTime
             };
-            console.log("Sending message to room " + user.currentRoom.id);
             var room = {
                 id: user.currentRoom.id
             };
@@ -137,9 +137,21 @@ $(document).ready(function () {
         updateRoomsList();
         socket.emit("userLeftRoom", userData, roomData);
     });
-    
-    $("#addToRoom").on('click',function(){
-        
+
+    $("#addToRoom").on('click', function () {
+
+    });
+
+
+    socket.on('createdRoom', function (room, users) {
+        users.forEach(function (aUser) {
+            if (aUser === user.name) {
+                user.availableRooms[room._id] = room;
+                updateRoomsList();
+                enterRoom(room);
+            }
+        });
+
     });
 
     //'sendroom', room{id:roomID,users:users,localLog:localLog}
@@ -160,57 +172,47 @@ $(document).ready(function () {
     socket.on('messageFromServer', function (message, room) {
         //if the room's id is part of my available rooms, add stuff to it
         //otherwise just don't do anything
-        if (room.id in Object.keys(user.availableRooms)) {
-            console.log("room id is in keys");
-            user.availableRooms[room.id].localLog.push(message);
-            var pc = $("#publicChat");
-            var scroll = true;//(pc.scrollTop() === pc.scroll.scrollHeight);
-            $("#room" + room.id).append(createMessageHTML(message));
-            if(scroll){
-                pc.scrollTop(pc[0].scrollHeight);
+        Object.keys(user.availableRooms).forEach(function (key) {
+            if (key === (""+room.id)) {
+                user.availableRooms[room.id].localLog.push(message);
+                var pc = $("#publicChat");
+                var scroll = true;//(pc.scrollTop() === pc.scroll.scrollHeight);
+                $("#room" + room.id).append(createMessageHTML(message));
+                if (scroll) {
+                    pc.scrollTop(pc[0].scrollHeight);
+                }
+                //if i'm not in the room, light up room
+                //set a new message var in the room to 1 so we know you have new messages
+                //when entering the room we should set it back to 0
+                if (room.id !== user.currentRoom.id) {
+                    user.availableRooms[room.id]["newMessage"] = 1;
+                } else {
+                    //just in case for some reason it wasn't set back to 0 when we entered the room
+                    //we can double check by setting it to 0 here
+                    user.availableRooms[room.id]["newMessage"] = 0;
+                }
             }
-            //if i'm not in the room, light up room
-            //set a new message var in the room to 1 so we know you have new messages
-            //when entering the room we should set it back to 0
-            if (room.id !== user.currentRoom.id) {
-                user.availableRooms[room.id]["newMessage"] = 1;
-            } else {
-                //just in case for some reason it wasn't set back to 0 when we entered the room
-                //we can double check by setting it to 0 here
-                user.availableRooms[room.id]["newMessage"] = 0;
-            }
-        }
-        else{
-            console.log("room id isn't in keys");
-            Object.keys(user.availableRooms).forEach(function(key){
-               console.log("Key: " + key + ":"+ user.availableRooms[key].id);
-            });
-        }
+        });
 
     });
 
     //'userLoggedIn', user{name:name}
     //on successful login, this broadcasts to all clients
     socket.on('userLoggedIn', function (userInfo) {
-        if(userInfo.name === user.name)
+        if (userInfo.name === user.name)
             return;
         //for each room that you have that this user's name is in
         //update the user list in it to show that they've loggeg in
         //maybe include a "User has entered the channel" message to the rooms?
-        console.log("user logged in: " + userInfo.name);
         user.availableRooms[0].users.push(userInfo.name);
-        console.log(user.availableRooms[0].users);
         var keys = Object.keys(user.availableRooms);
         keys.forEach(function (key) {
-            console.log("keys: " +key + " : " + user.availableRooms[key]);
             var room = user.availableRooms[key];
             var users = room.users;
-            console.log(users);
             if (users.indexOf(userInfo.name) >= 0) {
-                console.log("in room");
                 updateUsersInRoom(room);
                 var d = new Date();
-                var time = d.getHours() + ":"+d.getMinutes();
+                var time = d.getHours() + ":" + d.getMinutes();
                 var loggedInMessage = {
                     sender: "Server",
                     msg: userInfo.name + " logged in.",
@@ -224,41 +226,38 @@ $(document).ready(function () {
 
     //'senduser', userInfo{name:name, rooms:availableRooms{id:id,users:users,localLog:someLog/emptyLog}}
     //response to 'login' and 'createuser'
-    socket.on('senduser', function (userInfo) {
+    socket.on('sendUser', function (userInfo) {
         //TODO
-        if (userInfo.name === "null"){// || userInfo.msg.indexOf("created") >= 0) {
+        if (userInfo.name === "null") {// || userInfo.msg.indexOf("created") >= 0) {
             //set login message to an error
-            alert(userInfo.msg);
-            //
+            alert(userInfo.msg.toString());
             return;
         }
         user.name = userInfo.name;
-        if (userInfo.rooms.length > 0) {
-            var keys = Object.keys(userInfo.rooms);
-            keys.forEach(function (key) {
-                user.availableRooms[key] = userInfo.rooms[key];
-                //make all the room divs
-                var div = createDiv(user.availableRooms[key]);
-                $("#publicChat").append(div);
-            });
-        } else {
-            var publicRoom = {
-                name: "Public",
-                users: [user.name],
-                id: 0,
-                localLog: []
-            };
-            user.availableRooms[0] = publicRoom;
-            var div = createDiv(user.availableRooms[0]);
-            $("#publicChat").append(div);
-        }
+        
         //user = userInfo;
         //check if valid user
-        user.currentRoom = user.availableRooms[0];
+        //user.currentRoom = user.availableRooms[0];
         $("#displayUserName").text(user.name);
-        enterRoom(user.availableRooms[0]);
-        updateRoomsList();
+        //enterRoom(user.availableRooms[0]);
+        //updateRoomsList();
         $('#loginPrompt').modal('hide');
+    });
+
+    socket.on("addRoom", function (room) {
+        var key = room._id;
+        if (room.name === "Public")
+            key = 0;
+        room.id = key;
+        room.localLog = [];
+        user.availableRooms[key] = room;
+        var div = createDiv(user.availableRooms[key]);
+        $("#publicChat").append(div);
+        if (room.name === "Public") {
+            user.currentRoom = user.availableRooms[key];
+            enterRoom(user.availableRooms[key]);
+        }
+        updateRoomsList();
     });
 
     //'userLeftRoom', user{name:name},room{id:roomID}
@@ -346,7 +345,7 @@ function updateRoomsList() {
 function createRoomElement(room) {
     //create html for a group thing for the list
     //give it an id of roomButton1, roomButton2, etc
-    var html = "<button class=\"groupButton\" id=roomButton" + room.id + ">"+room.name+"</button>";
+    var html = "<button class=\"groupButton\" id=\"roomButton" + room.id + "\">" + room.name + "</button>";
     return html;
 }
 
