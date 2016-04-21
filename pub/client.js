@@ -218,18 +218,22 @@ $(document).ready(function () {
             alert("Invalid username/password");
             return;
         }
+        console.log("user info is valid");
+        console.log(userInfo.name+":"+userInfo['name']);
         user.name = userInfo.name;
-        if(userInfo.rooms.length > 0){
-        var keys = Object.keys(userInfo.rooms);
-        keys.forEach(function (key) {
-            user.availableRooms[key] = userInfo.rooms[key];
-                    //make all the room divs
-            var div = createDiv(user.availableRooms[key]);
-            $("#publicChat").append(div);
+        console.log(user.name);
+        if (userInfo.rooms.length > 0) {
+            console.log("Rooms length > 1");
+            var keys = Object.keys(userInfo.rooms);
+            keys.forEach(function (key) {
+                user.availableRooms[key] = userInfo.rooms[key];
+                //make all the room divs
+                var div = createDiv(user.availableRooms[key]);
+                $("#publicChat").append(div);
 
-        });
-    }
-        else{
+            });
+        } else {
+            console.log("Giving default public room, user has no rooms");
             var publicRoom = {
                 name: "Public",
                 users: [user.name],
@@ -279,7 +283,7 @@ $(document).ready(function () {
         var keys = Object.keys(this.user.availableRooms);
         var room = this.user.availableRooms[0];
         if (room.users.indexOf(user.name) >= 0) {
-            room.users.splice(room.users.indexOf(user.name),1);
+            room.users.splice(room.users.indexOf(user.name), 1);
         }
         updateUsersInRoom(room);
         keys.forEach(function (key) {
@@ -289,7 +293,7 @@ $(document).ready(function () {
                 //or only do that for public room? (aka, remove from users list like above)
             }
         });
-        
+
     });
 });
 
@@ -333,21 +337,21 @@ function updateGroupsList() {
     var keys = Object.keys(user.availableRooms);
     //clear our the current groups list
     $("#currentGroups").html("");
-    keys.forEach(function(key){
+    keys.forEach(function (key) {
         var roomElem = createGroupElement(user.availableRooms[key]);
         //add room element to groups list
         $("#currentGroups").append(roomElem);
         //add click function to it (?)
-        $("#roomButton"+user.availableRooms[key].id).on('click',function(){
+        $("#roomButton" + user.availableRooms[key].id).on('click', function () {
             enterRoom(user.availableRooms[key]);
         });
     });
 }
 
-function createGroupElement(room){
+function createGroupElement(room) {
     //create html for a group thing for the list
     //give it an id of roomButton1, roomButton2, etc
-    var html = "<div id=roomButton"+room.id+"></div>";
+    var html = "<div id=roomButton" + room.id + "></div>";
     return html;
 }
 
