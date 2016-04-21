@@ -13,7 +13,7 @@ var Room = mongoose.model('Room', {name: String, log: Array, users: Object});
 
 function newUser(username, passwd, socket){
 	if (!userExists(username)){
-		User.create({name:username, pass:passwd, rooms:[]}, function(err, user){
+		User.create({name:username, pass:passwd, rooms:{}}, function(err, user){
 			if (!err){
 				socket.emit("senduser", {'user':user.name,'rooms':user.rooms});
 				console.log("Created user "+ username);
