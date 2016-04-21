@@ -220,11 +220,16 @@ $(document).ready(function () {
         var keys = Object.keys(userInfo.rooms);
         keys.forEach(function (key) {
             user.availableRooms[key] = userInfo.rooms[key];
+                    //make all the room divs
+            var div = createDiv(user.availableRooms[key]);
+            $("#publicChat").append(div);
+
         });
         //user = userInfo;
         //check if valid user
+        user.currentRoom = user.availableRooms[0];
         $("#displayUserName").text(user.name);
-        updateUsersInRoom(user.availableRooms[0]);
+        enterRoom(user.availableRooms[0]);
         //var keys = Object.keys(user.availableRooms);
         //$("#currentUsers").append("<p>" + user.availableRooms[0].users + "</p>" + "</br");
         /*
@@ -241,9 +246,6 @@ $(document).ready(function () {
          }).appendTo("#createGroup");
          */
 
-        //make all the room divs
-        var div = createDiv(user.availableRooms[0]);
-        $("#publicChat").append(div);
         $('#loginPrompt').modal('hide');
     });
 
