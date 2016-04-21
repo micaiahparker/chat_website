@@ -57,7 +57,7 @@ $(document).ready(function () {
                 getPassword = $('#password').val(),
                 login = {};
 
-        login.user = getUsername;
+        login.name = getUsername;
         login.pass = getPassword;
         //hash password
         socket.emit('login', login);
@@ -71,7 +71,7 @@ $(document).ready(function () {
         var createUser = $('#username').val(),
                 createPassword = $("#password").val(),
                 account = {};
-        account.user = createUser;
+        account.name = createUser;
         account.pass = createPassword;
 
         socket.emit('newuser', account);
