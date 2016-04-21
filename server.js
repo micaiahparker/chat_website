@@ -15,7 +15,7 @@ function newUser(username, passwd, socket){
 	if (!userExists(username)){
 		User.create({name:username, pass:passwd, rooms:{}}, function(err, user){
 			if (!err){
-				socket.emit("senduser", {'user':user.name,'rooms':user.rooms});
+				socket.emit("senduser", {name:user.name,rooms:user.rooms});
 				console.log("Created user "+ username);
 			} else {
 				badUser(socket);
@@ -46,7 +46,7 @@ function getUser(username, passwd, socket){
 }
 
 function badUser(socket){
-	socket.emit("senduser", {'user':'null','rooms':[]});
+	socket.emit("senduser", {name:'null',rooms:{}});
 }
 
 function userExists(username){
