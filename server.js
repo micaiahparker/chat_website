@@ -8,8 +8,8 @@ app.use(express.static("pub"));
 var mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/chat_server');
 
-var User = mongoose.model('User', {name: String, pass: String, rooms: Array});
-var Room = mongoose.model('Room', {name: String, log: Array, users: Array});
+var User = mongoose.model('User', {name: String, pass: String, rooms: Object});
+var Room = mongoose.model('Room', {name: String, log: Array, users: Object});
 
 function newUser(username, passwd, socket){
 	if (!userExists(username)){
