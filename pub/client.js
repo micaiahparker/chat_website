@@ -152,6 +152,7 @@ $(document).ready(function () {
         //if the room's id is part of my available rooms, add stuff to it
         //otherwise just don't do anything
         if (room.id in Object.keys(user.availableRooms)) {
+            console.log("room id is in keys");
             user.availableRooms[room.id].localLog.push(message);
             $("#room" + room.id).append(createMessageHTML(message));
             //if i'm not in the room, light up room
@@ -164,6 +165,12 @@ $(document).ready(function () {
                 //we can double check by setting it to 0 here
                 user.availableRooms[room.id]["newMessage"] = 0;
             }
+        }
+        else{
+            console.log("room id isn't in keys");
+            Object.keys(user.availableRooms).forEach(function(key){
+               console.log("Key: " + key + ":"+ user.availableRooms[key].id);
+            });
         }
 
     });
