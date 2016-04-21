@@ -43,7 +43,7 @@ function newUser(username, passwd, socket) {
 function getUser(username, passwd, socket) {
     User.findOne({name: username}, 'name pass rooms', function (err, user) {
 
-        if (!err && user.pass === passwd) {
+        if (!err && user && user.pass === passwd) {
             //console.log(user.rooms[0]);
             user.rooms.forEach(function (room) {
                 getRoom(room, socket);

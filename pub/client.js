@@ -89,6 +89,7 @@ $(document).ready(function () {
                 groupUsers = $("#groupUsers").val();
 
         var splitUsers = groupUsers.split(",");
+        splitUsers.push(user.name);
         var room = {
             users: splitUsers,
             name: groupName,
@@ -138,17 +139,34 @@ $(document).ready(function () {
         socket.emit("userLeftRoom", userData, roomData);
     });
 
-    $("#addToRoom").on('click', function () {
-
+    $("#addUserToRoomButton").on('click', function () {
+        var userName = $("#addToRoom").val();
+        var userInfo = {
+            name: userName
+        };
+        var room = {
+            name: user.currentRoom.name
+        };
+        socket.emit("addToRoom",userInfo,room);
     });
 
 
     socket.on('createdRoom', function (room, users) {
         users.forEach(function (aUser) {
             if (aUser === user.name) {
-                user.availableRooms[room._id] = room;
+                var key = room._id;
+                if (room.name === "Public")
+                    key = 0;
+                room.id = key;
+                room.localLog = [];
+                user.availableRooms[key] = room;
+                var div = createDiv(user.availableRooms[key]);
+                $("#publicChat").append(div);
+                if (room.name === "Public") {
+                    user.currentRoom = user.availableRooms[key];
+                    enterRoom(user.availableRooms[key]);
+                }
                 updateRoomsList();
-                enterRoom(room);
             }
         });
 
@@ -173,7 +191,9 @@ $(document).ready(function () {
         //if the room's id is part of my available rooms, add stuff to it
         //otherwise just don't do anything
         Object.keys(user.availableRooms).forEach(function (key) {
-            if (key === (""+room.id)) {
+            console.log(key + ":" + room.id);
+            if (key === ("" + room.id)) {
+                console.log("message " + key + ":" + room.id + ":" + message.msg);
                 user.availableRooms[room.id].localLog.push(message);
                 var pc = $("#publicChat");
                 var scroll = true;//(pc.scrollTop() === pc.scroll.scrollHeight);
@@ -234,7 +254,7 @@ $(document).ready(function () {
             return;
         }
         user.name = userInfo.name;
-        
+
         //user = userInfo;
         //check if valid user
         //user.currentRoom = user.availableRooms[0];
@@ -304,6 +324,7 @@ function createMessageHTML(message) {
 function enterRoom(room) {
     //if in groups tab
     //highlight currently joined group(?)
+    console.log("Entered room: " + room.name);
     $("#room" + user.currentRoom.id).hide();
     user.currentRoom = room;
     $("#room" + user.currentRoom.id).show();
