@@ -88,6 +88,7 @@ function addUserToRoom(username, roomname) {
                 console.log(user.rooms + ":" + room.users);
                 user.save();
                 room.save();
+                io.emit("userEnteredRoom", {user:user, room:room});
             } else {
                 console.log(user+":"+room);
             }
