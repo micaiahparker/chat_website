@@ -73,7 +73,7 @@ function newRoom(roomname, users) {
             io.emit('createdRoom',room,users);
             console.log("created room " + room.name);
         } else {
-            console.log("couldn't create room " + room.name);
+            console.log("couldn't create room " + roomname);
         }
     });
 }
@@ -81,13 +81,15 @@ function newRoom(roomname, users) {
 function addUserToRoom(username, roomname) {
     User.findOne({name: username}, 'name rooms', function (err1, user) {
         Room.findOne({name: roomname}, 'name users', function (err2, room) {
-            if (user) {
+            if (user && room) {
                 console.log(user);
                 user.rooms.push(room.name);
                 room.users.push(user.name);
                 console.log(user.rooms + ":" + room.users);
                 user.save();
                 room.save();
+            } else {
+                console.log(user+":"+room);
             }
         });
     });
