@@ -62,7 +62,8 @@
                     <ul class="nav navbar-nav">
                      <li  class="dropdown"><a id="chat" class="dropdown-toggle" data-toggle="dropdown" href="#">options<span class="caret"></span></a>
                     <ul class="dropdown-menu">  
-                        <li><a href="#createGroup" data-toggle="modal">create group chat</a></li>
+                        <li><a href="#createRoom" data-toggle="modal">create group chat</a></li>
+                        <li><a href="#addToRoom" data-toggle="modal">add user to room</a></li>
                         <li><a id="leaveRoom" href="#">leave room</a></li>
                         <li><a id="logout" href="#">logout</a></li>
                     </ul>
@@ -168,16 +169,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Find a group chat</h4>
+          <h4 class="modal-title">Add to room</h4>
         </div>
         <div class="modal-body">
           <form>
                     <div class="form-group">
-                        <label for="findGroup">enter the group name:</label>
-                        <input type="text" id="findAGroup" class="form-control" placeholder="enter group name">
+                        <label for="findGroup">enter the user(s):</label>
+                        <input type="text" id="addToRoom" class="form-control" placeholder="enter user name">
                     </div>
-                        <label for="request">Send request to join group</label>
-                        <button type="button" id="sendRequest" class="btn btn-primary">send</button>
+                        <button type="button" id="sendRequest" class="btn btn-primary">Add</button>
                 </form>
         </div>
         <div class="modal-footer">
