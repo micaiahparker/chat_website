@@ -104,6 +104,7 @@ $(document).ready(function () {
                 msg: msg,
                 time: time
             };
+            console.log("Sending message to room " + user.currentRoom.id);
             var room = {
                 id: user.currentRoom.id
             };
