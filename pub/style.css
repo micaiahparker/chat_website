@@ -94,6 +94,9 @@
     resize: none;
     
 }
+.message{
+    margin-bottom: 2px;
+}
 
 .container{
     margin-top: 15px;
