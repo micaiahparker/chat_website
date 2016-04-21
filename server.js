@@ -67,8 +67,8 @@ function newRoom(roomname, users) {
 }
 
 function addUserToRoom(username, roomname) {
-    User.find({name: username}, 'name', function (err, user) {
-        Room.find({name: roomname}, 'name', function (err, room) {
+    User.find({name: username}, 'name rooms', function (err, user) {
+        Room.find({name: roomname}, 'name users', function (err, room) {
             if(!user){
                 console.log("Shit");
             }
