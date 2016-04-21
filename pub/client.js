@@ -214,9 +214,12 @@ $(document).ready(function () {
          * 
          */
         if (userInfo.name === "null") {
+            //set login message to an error
+            alert("Invalid username/password");
             return;
         }
         user.name = userInfo.name;
+        if(userInfo.rooms.length > 0){
         var keys = Object.keys(userInfo.rooms);
         keys.forEach(function (key) {
             user.availableRooms[key] = userInfo.rooms[key];
@@ -225,6 +228,16 @@ $(document).ready(function () {
             $("#publicChat").append(div);
 
         });
+    }
+        else{
+            var publicRoom = {
+                name: "Public",
+                users: [user.name],
+                id: 0,
+                localLog: []
+            };
+            user.availableRooms[0] = publicRoom;
+        }
         //user = userInfo;
         //check if valid user
         user.currentRoom = user.availableRooms[0];
