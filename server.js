@@ -13,7 +13,7 @@ var Room = mongoose.model('Room', {name: String, log: Array, users: Array});
 
 function newUser(username, passwd, socket){
 	if (!userExists(username)){
-		User.create({name:username, pass:passwd}, function(err, user){
+		User.create({name:username, pass:passwd, rooms:[]}, function(err, user){
 			if (!err){
 				socket.emit("senduser", {'user':user.name,'rooms':user.rooms});
 				console.log("Created user "+ username);
@@ -33,6 +33,7 @@ function getUser(username, passwd, socket){
 		User.findOne({name:username, pass:passwd}, 'name rooms', function(err, user){
 			if (!err){
 				socket.emit("senduser", user);
+				console.log("sent: "+ user);
 			} else {
 				console.log("An error for user "+username);
 				badUser(socket);
@@ -53,10 +54,10 @@ function userExists(username){
 	User.findOne({name:username}, 'name', function(err, user){
 		if (err || !user){
 			ret = false;
-			console.log("User: "+useranme+" doesn't exist");
+			console.log("User: "+username+" doesn't exist");
 		} else {
 			ret = true;
-			console.log("User: "+useranme+" exists");
+			console.log("User: "+username+" exists");
 		}
 	});
 	return ret;
@@ -66,6 +67,8 @@ function newRoom(roomname, users){
 	Room.create({name:roomname, log:[],users:[users]}, function(err, room){
 		if (!err){
 			console.log("created room "+room.name);
+		} else {
+			console.log("couldn't create room "+room.name);
 		}
 	});
 }
@@ -87,5 +90,11 @@ io.on("connection", function(socket){
 });
 
 server.listen(1234, function() {
+	User.find({}, function(err, users){
+		users.forEach(function(current){
+			console.log("bye "+current.name);
+			current.remove();
+		});
+	});
     console.log("Server is listening on port 1234");
 });
