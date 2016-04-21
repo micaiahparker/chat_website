@@ -84,8 +84,8 @@ io.on("connection", function(socket){
 		users.push(data['user']);
 		socket.emit('senduser', {'user':data['user'], 'users':users});
 	});
-	socket.on('messageToServer', function(data){
-		io.emit('messageFromServer', data);
+	socket.on('messageToServer', function(data, room){
+		io.emit('messageFromServer', data, room);
 	});
 });
 
