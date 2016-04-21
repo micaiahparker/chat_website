@@ -1,14 +1,7 @@
 var express = require("express");
 var app = express();
-var fs = require("fs");
-
-var privateKey = fs.readFileSync('certs/chat_key.pem').toString();
-var certificate = fs.readFileSync('certs/chat_cert.crt').toString();  
-
-const options = {key: privateKey, cert: certificate};
-
-var https = require("https");
-var server = https.Server(app, options);
+var http = require("http");
+var server = http.Server(app);
 var socketio = require("socket.io");
 var io = socketio(server);
 app.use(express.static("pub"));
@@ -23,12 +16,15 @@ function newUser(username, passwd, socket){
 		User.create({name:username, pass:passwd}, function(err, user){
 			if (!err){
 				socket.emit("senduser", {'user':user.name,'rooms':user.rooms});
+				console.log("Created user "+ username);
 			} else {
 				badUser(socket);
+				console.log("Couldn't create user "+username);
 			}
 		});
 	} else {
 		badUser(socket);
+		console.log("User already exists "+username);
 	}
 }
 
@@ -37,10 +33,14 @@ function getUser(username, passwd, socket){
 		User.findOne({name:username, pass:passwd}, 'name rooms', function(err, user){
 			if (!err){
 				socket.emit("senduser", user);
+			} else {
+				console.log("An error for user "+username);
+				badUser(socket);
 			}
 		});
 	} else {
 		badUser(socket);
+		console.log("User: "+username+" already exists");
 	}
 }
 
@@ -53,8 +53,10 @@ function userExists(username){
 	User.findOne({name:username}, 'name', function(err, user){
 		if (err || !user){
 			ret = false;
+			console.log("User: "+useranme+" doesn't exist");
 		} else {
 			ret = true;
+			console.log("User: "+useranme+" exists");
 		}
 	});
 	return ret;
