@@ -3,6 +3,7 @@ var app = express();
 var http = require("http");
 var server = http.Server(app);
 var socketio = require("socket.io");
+var escapeHTML = require("escape-html");
 var io = socketio(server);
 app.use(express.static("pub"));
 var mongoose = require('mongoose');
@@ -145,6 +146,9 @@ io.on("connection", function (socket) {
         getRoom(room, socket);
     });
     socket.on('logout', function (userName) {
+        io.emit('userLoggedOut', {name: userName});
+    });
+    socket.on('disconnect', function (userName) {
         io.emit('userLoggedOut', {name: userName});
     });
 });
